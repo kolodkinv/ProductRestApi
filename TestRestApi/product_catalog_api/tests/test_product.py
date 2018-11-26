@@ -4,7 +4,7 @@ import pytest
 from rest_framework.test import APIRequestFactory
 
 from product_catalog_api.models import Product
-from product_catalog_api.views.products import ProductListView
+from product_catalog_api.views.products import ProductViewSet
 
 pytestmark = pytest.mark.django_db
 
@@ -20,11 +20,11 @@ class TestProducts(unittest.TestCase):
                                {'title': 'NAME',
                                 'is_new': True,
                                 'SKU': '1234567891012'})
-        ProductListView.as_view()(request)
+        ProductViewSet.as_view({'post': 'create'})(request)
         products = Product.objects.all()
         assert len(products) == 2, 'Корректное добавление товара'
 
-        ProductListView.as_view()(request)
+        ProductViewSet.as_view({'post': 'create'})(request)
         products = Product.objects.all()
         assert len(products) == 2, 'Товар не добавляется при существующем SKU'
 
@@ -32,24 +32,15 @@ class TestProducts(unittest.TestCase):
                                {'title': 'NAME',
                                 'is_new': True,
                                 'SKU': '123456789101'})
-        ProductListView.as_view()(request)
+        ProductViewSet.as_view({'post': 'create'})(request)
         products = Product.objects.all()
         assert len(products) == 2, 'Товар недобавляется при неправильном SKU'
 
     def test_filter(self):
         factory = APIRequestFactory()
-        request = factory.get('/api/products?is_new=True')
-        result = ProductListView.as_view()(request)
-        assert len(result.data) == 1, 'Фильтрация новых товаров'
-        assert result.data[0]['is_new'], 'Правильная фильтрация новинок'
-
-        request = factory.get('/api/products?is_new=False')
-        result = ProductListView.as_view()(request)
-        assert len(result.data) == 0, 'Фильтрация старых товаров'
-
         request = factory.get('/api/products')
-        result = ProductListView.as_view()(request)
-        assert len(result.data) == 1, 'Получение всех товаров'
+        result = ProductViewSet.as_view({'get': 'list'})(request)
+        assert list(result.data.items())[0][1] == 1, 'Получение всех товаров'
 
 
 

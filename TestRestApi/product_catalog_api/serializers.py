@@ -8,6 +8,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Product
         fields = ('url', 'title', 'SKU', 'date_creation', 'image', 'is_new')
+        lookup_field = 'pk'
 
     def validate(self, data):
         if len(data['SKU']) != Product.SKU_LENGTH:

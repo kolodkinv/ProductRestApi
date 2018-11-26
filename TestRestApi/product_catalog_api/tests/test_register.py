@@ -4,7 +4,7 @@ import pytest
 from rest_framework.test import APIRequestFactory
 
 from product_catalog_api.models import ProductRegister, Product
-from product_catalog_api.views.product_registers import ProductRegisterListView
+from product_catalog_api.views.product_registers import ProductRegisterViewSet
 
 pytestmark = pytest.mark.django_db
 
@@ -24,7 +24,7 @@ class TestProductRegisters(unittest.TestCase):
                                 'count': 1,
                                 'action': 'A',
                                 'product': '1234567891010'})
-        ProductRegisterListView.as_view()(request)
+        ProductRegisterViewSet.as_view({'post': 'create'})(request)
         records = ProductRegister.objects.all()
         assert len(records) == 2, 'Корректное добавление записи в реестр'
 
@@ -33,7 +33,7 @@ class TestProductRegisters(unittest.TestCase):
                                 'count': 1,
                                 'action': 'A',
                                 'product': '1234567891014'})
-        ProductRegisterListView.as_view()(request)
+        ProductRegisterViewSet.as_view({'post': 'create'})(request)
         products = ProductRegister.objects.all()
         assert len(products) == 2, \
             'Добавление записи с несуществующим товаром в реестр'
@@ -43,7 +43,7 @@ class TestProductRegisters(unittest.TestCase):
                                 'count': 0,
                                 'action': 'A',
                                 'product': '1234567891010'})
-        ProductRegisterListView.as_view()(request)
+        ProductRegisterViewSet.as_view({'post': 'create'})(request)
         products = ProductRegister.objects.all()
         assert len(products) == 2, \
             'Добавление записи с неправильным количеством товаров'
@@ -53,7 +53,7 @@ class TestProductRegisters(unittest.TestCase):
                                 'count': 1,
                                 'action': 'B',
                                 'product': '1234567891010'})
-        ProductRegisterListView.as_view()(request)
+        ProductRegisterViewSet.as_view({'post': 'create'})(request)
         products = ProductRegister.objects.all()
         assert len(products) == 2, \
             'Добавление записи с неправильной операцией'
@@ -61,6 +61,7 @@ class TestProductRegisters(unittest.TestCase):
     def test_filter(self):
         factory = APIRequestFactory()
         request = factory.get('/api/product-register')
-        result = ProductRegisterListView.as_view()(request)
-        assert len(result.data) == 1, 'Получение всех записей в реестре'
+        result = ProductRegisterViewSet.as_view({'get': 'list'})(request)
+        assert list(result.data.items())[0][1] == 1, \
+            'Получение всех записей в реестре'
 
