@@ -9,3 +9,7 @@ Test django rest framework
     docker-compose run backend python manage.py migrate
     # Запуск контейнеров
     docker-compose up
+    
+    
+    # Для запуска тестов
+    docker-compose run backend pytest
