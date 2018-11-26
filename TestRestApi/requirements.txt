@@ -1,0 +1,6 @@
+django>=2.1,<=2.1.99
+djangorestframework
+django-admin
+psycopg2-binary
+Pillow
+django-filter
