@@ -10,7 +10,7 @@ class Product(models.Model):
     date_creation = models.DateTimeField(
         verbose_name='Дата создания', auto_now_add=True)
     is_new = models.BooleanField(verbose_name='Новинка', default=True)
-    image = models.ImageField(verbose_name='Картинка товара')
+    image = models.ImageField(verbose_name='Картинка товара', blank=True)
 
     def __str__(self):
         return '({}) {}'.format(self.SKU, self.title)

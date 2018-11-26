@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from product_catalog_api.serializers import ProductRegisterSerializer
-from product_catalog_api.models import ProductRegister
+from product_catalog_api.models import ProductRegister, Product
 
 
 class ProductRegisterView(APIView):

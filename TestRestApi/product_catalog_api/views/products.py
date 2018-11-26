@@ -26,7 +26,7 @@ class ProductListView(APIView):
     Список товаров
     """
     serializer_class = ProductSerializer
-    filter_fields = ('is_new',)
+    filterset_fields = ('is_new',)
 
     def get(self, request):
         search = django_filters.rest_framework.DjangoFilterBackend()

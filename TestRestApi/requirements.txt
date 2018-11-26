@@ -4,3 +4,4 @@ django-admin
 psycopg2-binary
 Pillow
 django-filter
+pytest-django
